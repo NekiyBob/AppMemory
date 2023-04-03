@@ -11,16 +11,12 @@ import java.io.Serializable;
 public class Note implements Serializable {
     @PrimaryKey(autoGenerate = true)
     private int id;
-
     @ColumnInfo(name = "title")
     private String title;
-
     @ColumnInfo(name = "note_text")
     private String noteText;
-
     @ColumnInfo(name = "color")
     private String color;
-
     @ColumnInfo(name = "image_path")
     private String imagePath;
     @ColumnInfo(name = "web_link")
@@ -65,13 +61,18 @@ public class Note implements Serializable {
     public void setWebLink(String webLink) {
         this.webLink = webLink;
     }
-    public String getImagePath() {return imagePath;}
 
-    public void setImagePath(String imagePath) {this.imagePath = imagePath;}
+    public String getImagePath() {
+        return imagePath;
+    }
+
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
+    }
 
     @NonNull
     @Override
-    public String toString(){
+    public String toString() {
         return (title + " " + noteText);
     }
 }

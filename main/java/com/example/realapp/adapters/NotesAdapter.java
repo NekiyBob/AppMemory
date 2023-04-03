@@ -20,16 +20,16 @@ import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.util.List;
 
+//адаптер для RecyclerView, который отображает список заметок  в приложении.
 public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHolder>{
+
+    //список заметок, которые будут отображаться в RecyclerView.
     private final List<Note> notes;
     private final NotesListener notesListener;
-
-
     public NotesAdapter(List<Note> notes, NotesListener notesListener) {
         this.notes = notes;
         this.notesListener = notesListener;
     }
-
     @NonNull
     @Override
     public NoteViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -37,7 +37,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
                 LayoutInflater.from(parent.getContext()).inflate(
                 R.layout.item_container_note, parent, false));
     }
-
+    //связывает данные заметки с элементом списка на определенной позиции. Устанавливает слушатель событий на нажатие на элемент.
     @Override
     public void onBindViewHolder(@NonNull NoteViewHolder holder, @SuppressLint("RecyclerView") int position) {
         holder.setNote(notes.get(position));
@@ -60,7 +60,6 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
         TextView textTitle, textPart;
         LinearLayout layoutNote;
         RoundedImageView imageNote;
-
         NoteViewHolder(@NonNull View itemView) {
             super(itemView);
             textTitle = itemView.findViewById(R.id.textTitle);

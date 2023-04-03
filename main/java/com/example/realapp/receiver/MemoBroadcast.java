@@ -31,7 +31,6 @@ public class MemoBroadcast extends BroadcastReceiver {
         if (NotificationTitle.equals("")){
             NotificationTitle = "";
         }
-
         PendingIntent pendingIntent = PendingIntent.getActivity(context, MainActivity.codeForNotificationChannel, repeating_Intent, PendingIntent.FLAG_IMMUTABLE);
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, Integer.toString(changingChannelIdBuilder))
                 .setContentIntent(pendingIntent)
@@ -40,11 +39,8 @@ public class MemoBroadcast extends BroadcastReceiver {
                 .setContentTitle("Пора повторить: " + NotificationTitle)
                 .setPriority(Notification.PRIORITY_DEFAULT)
                 .setAutoCancel(true);
-
-
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.notify(MainActivity.codeForNotificationChannel, builder.build());
     }
 
 }
-

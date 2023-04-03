@@ -123,7 +123,7 @@ public class CreateNoteActivity extends AppCompatActivity {
     public void sendNotificationAtTime(){
         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
         // Через 5 минуты
-        alarmManager.set(AlarmManager.RTC_WAKEUP, (long) (System.currentTimeMillis() + ((1000 * 60) * 5 * 0.7)), getUniquePI());
+        alarmManager.set(AlarmManager.RTC_WAKEUP, (long) (System.currentTimeMillis() + ((1000 * 1) * 1 * 0.7)), getUniquePI());
         //alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), AlarmManager.INTERVAL_HALF_HOUR, getUniquePI());
         // Через 20 минуты
         alarmManager.set(AlarmManager.RTC_WAKEUP, (long) (System.currentTimeMillis() + (1000 * 60) * 20 * 0.7), getUniquePI());
@@ -211,7 +211,6 @@ public class CreateNoteActivity extends AppCompatActivity {
         //Проверка на пустые поля
         if (inputNoteText.getText().toString().trim().isEmpty() && inputNoteTitle.getText().toString().trim().isEmpty()){
             Toast.makeText(this, "Note can't be empty!", Toast.LENGTH_SHORT).show();
-            //return;
             return false;
         }
 

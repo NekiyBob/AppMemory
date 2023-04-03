@@ -13,7 +13,6 @@ import com.example.realapp.entities.Note;
 @Database(entities = {Note.class}, version = 1, exportSchema = false)
 public abstract class NotesDataBase extends RoomDatabase {
     private static NotesDataBase notesDataBase;
-
     //Возвращает экземпляр DAO
     public static synchronized NotesDataBase getDataBase (Context context){
         if (notesDataBase == null){
@@ -23,6 +22,5 @@ public abstract class NotesDataBase extends RoomDatabase {
         }
         return notesDataBase;
     }
-
     public abstract NoteDao noteDao();
 }
