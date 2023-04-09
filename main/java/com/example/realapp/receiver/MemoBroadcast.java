@@ -7,9 +7,7 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-
 import androidx.core.app.NotificationCompat;
-
 import com.example.realapp.R;
 import com.example.realapp.activities.CreateNoteActivity;
 import com.example.realapp.activities.MainActivity;
@@ -33,7 +31,7 @@ public class MemoBroadcast extends BroadcastReceiver {
         }
 
         PendingIntent pendingIntent = PendingIntent.getActivity(context, MainActivity.codeForNotificationChannel, repeating_Intent, PendingIntent.FLAG_IMMUTABLE);
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, Integer.toString(changingChannelIdBuilder))
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "1010101")
                 .setContentIntent(pendingIntent)
                 .setSmallIcon(R.drawable.ic_notification)
                 .setContentText(NotificationText)
