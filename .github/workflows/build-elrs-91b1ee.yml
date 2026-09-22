@@ -1,0 +1,63 @@
+name: Build ELRS 91b1ee BAYCKRC
+
+on:
+  push:
+    branches:
+      - elrs-build-91b1ee
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout ExpressLRS 91b1ee
+        uses: actions/checkout@v4
+        with:
+          repository: ExpressLRS/ExpressLRS
+          ref: 91b1ee48410e534255f82e4e72f38706e6f02af2
+          path: elrs
+
+      - name: Checkout ExpressLRS targets
+        uses: actions/checkout@v4
+        with:
+          repository: ExpressLRS/targets
+          ref: 2b90c511e965304e333d99ca5f724dbc8b7c154f
+          path: elrs/src/hardware
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Install PlatformIO
+        run: |
+          python -m pip install --upgrade pip
+          pip install platformio wheel
+
+      - name: Build Unified ESP32 LR1121 RX
+        working-directory: elrs/src
+        env:
+          PLATFORMIO_BUILD_FLAGS: "-DRegulatory_Domain_FCC_915"
+        run: |
+          pio run -e Unified_ESP32_LR1121_RX_via_WIFI
+
+      - name: Configure BAYCKRC RX
+        working-directory: elrs/src
+        run: |
+          python python/binary_configurator.py \
+            --target bayckrc.rx_dual.dual \
+            --phrase Test \
+            --domain au_915 \
+            --rx-baud 420000 \
+            --auto-wifi 60 \
+            --no-lock-on-first-connection \
+            .pio/build/Unified_ESP32_LR1121_RX_via_WIFI/firmware.bin
+          cp .pio/build/Unified_ESP32_LR1121_RX_via_WIFI/firmware.bin \
+             ../../BAYCKRC_91b1ee_AU915_Test.bin
+          sha256sum ../../BAYCKRC_91b1ee_AU915_Test.bin
+
+      - name: Upload firmware
+        uses: actions/upload-artifact@v4
+        with:
+          name: BAYCKRC_91b1ee_AU915_Test
+          path: BAYCKRC_91b1ee_AU915_Test.bin
+          if-no-files-found: error
