@@ -1,4 +1,4 @@
-name: Build ELRS 91b1ee BAYCKRC
+name: Build/Compare ELRS 91b1ee
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
       - elrs-build-91b1ee
 
 jobs:
-  build:
+  build-nomad:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout ExpressLRS 91b1ee
@@ -15,12 +15,17 @@ jobs:
           repository: ExpressLRS/ExpressLRS
           ref: 91b1ee48410e534255f82e4e72f38706e6f02af2
           path: elrs
+          fetch-depth: 0
 
-      - name: Checkout ExpressLRS targets
+      - name: Make source identify as master
+        working-directory: elrs
+        run: git checkout -B master 91b1ee48410e534255f82e4e72f38706e6f02af2
+
+      - name: Checkout historical ExpressLRS targets
         uses: actions/checkout@v4
         with:
           repository: ExpressLRS/targets
-          ref: 2b90c511e965304e333d99ca5f724dbc8b7c154f
+          ref: 7ad0358e3e6339e62d1e0dd4af4f3d61f3159c3a
           path: elrs/src/hardware
 
       - name: Set up Python
@@ -33,31 +38,28 @@ jobs:
           python -m pip install --upgrade pip
           pip install platformio wheel
 
-      - name: Build Unified ESP32 LR1121 RX
+      - name: Build Unified ESP32 LR1121 TX
         working-directory: elrs/src
         env:
           PLATFORMIO_BUILD_FLAGS: "-DRegulatory_Domain_FCC_915"
-        run: |
-          pio run -e Unified_ESP32_LR1121_RX_via_WIFI
+        run: pio run -e Unified_ESP32_LR1121_TX_via_WIFI
 
-      - name: Configure BAYCKRC RX
+      - name: Configure historical Nomad
         working-directory: elrs/src
         run: |
           python python/binary_configurator.py \
-            --target bayckrc.rx_dual.dual \
-            --phrase Test \
+            --target radiomaster.tx_dual.nomad \
+            --phrase "56,70,175,142,124,142" \
             --domain au_915 \
-            --rx-baud 420000 \
             --auto-wifi 60 \
-            --no-lock-on-first-connection \
-            .pio/build/Unified_ESP32_LR1121_RX_via_WIFI/firmware.bin
-          cp .pio/build/Unified_ESP32_LR1121_RX_via_WIFI/firmware.bin \
-             ../../BAYCKRC_91b1ee_AU915_Test.bin
-          sha256sum ../../BAYCKRC_91b1ee_AU915_Test.bin
+            .pio/build/Unified_ESP32_LR1121_TX_via_WIFI/firmware.bin
+          cp .pio/build/Unified_ESP32_LR1121_TX_via_WIFI/firmware.bin \
+             ../../Nomad_upstream_91b1ee_AU915.bin
+          sha256sum ../../Nomad_upstream_91b1ee_AU915.bin
 
-      - name: Upload firmware
+      - name: Upload Nomad firmware
         uses: actions/upload-artifact@v4
         with:
-          name: BAYCKRC_91b1ee_AU915_Test
-          path: BAYCKRC_91b1ee_AU915_Test.bin
+          name: Nomad_upstream_91b1ee_AU915
+          path: Nomad_upstream_91b1ee_AU915.bin
           if-no-files-found: error
